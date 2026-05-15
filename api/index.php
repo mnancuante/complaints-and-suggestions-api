@@ -33,11 +33,11 @@ if ($uri === '/complaints') {
         case 'POST':
             $complaint_controller->createComplaint();
             break;
-        
+
         case 'PUT':
             $complaint_controller->updateComplaint();
             break;
-    
+
         case 'DELETE':
             if (isset($_GET['id'])) {
                 $complaint_controller->deleteComplaint($_GET['id']);
@@ -47,34 +47,7 @@ if ($uri === '/complaints') {
             break;
         default:
             Response::error("Method Not Allowed", 405);
-        }
     }
-    else {
-        Response::error ("Not Found", 404);
-    }
-
-    // if ($uri === '/complaints') {
-
-        //     if ($method === 'GET') {
-        
-        //         if (isset($_GET['id'])) {
-        //             $complaint_controller->getComplaintById($_GET['id']);
-        //         } else {
-        //             $complaint_controller->getAllComplaints();
-        //         }
-        
-        //     } elseif ($method === 'POST') {
-        
-        //         $complaint_controller->createComplaint();
-        
-        //     } else {
-        //         http_response_code(405);
-        //         echo json_encode(["error" => "Method Not Allowed"]);
-        //     }
-        
-        // } else {
-        //     http_response_code(404);
-        //     echo json_encode(["error" => "Not Found"]);
-        
-        // }
-?>
+} else {
+    Response::error("Not Found", 404);
+}
