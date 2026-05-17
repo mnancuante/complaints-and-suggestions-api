@@ -16,8 +16,8 @@ class ComplaintService
 
     private function findComplaintOrfail(int $id)
     {
-        $id = $this->complaint_repository->getComplaintById($id);
-        if (!$id) {
+        $complaint = $this->complaint_repository->getComplaintById($id);
+        if (!$complaint) {
             throw new \Exception('Complaint not found with ID: ' . $id);
         }
     }
