@@ -72,10 +72,10 @@ class ComplaintService
         return $this->complaint_repository->updateComplaint($id, $data);
     }
 
-    public function deleteComplaint(int $id)
+    public function deleteComplaint(int $id) : void
     {
         ComplaintValidator::validateId($id);
         $this->findComplaintOrfail($id);
-        return $this->complaint_repository->deleteComplaint($id);
+        $this->complaint_repository->deleteComplaint($id);
     }
 }

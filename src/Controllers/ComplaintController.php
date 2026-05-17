@@ -83,8 +83,8 @@ class ComplaintController
                 throw new \Exception('ID must be a positive integer');
             }
             $id = (int)$id;
-            $result = $this->complaint_service->deleteComplaint($id);
-            Response::success($result);
+            $this->complaint_service->deleteComplaint($id);
+            Response::success(['success' => "Complaint with ID $id deleted successfully"]);
         } catch (Exception $e) {
             Response::error($e->getMessage());
         }

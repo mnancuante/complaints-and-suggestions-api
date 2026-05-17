@@ -8,9 +8,8 @@ class Response
         http_response_code($status_code);
         echo json_encode($response);
     }
-    public static function success($data, int $status_code = 200): void
+    public static function success(array $data, int $status_code = 200): void
     {
-        header("Content-Type: application/json");
         http_response_code($status_code);
         self::send([
             'success' => true,
@@ -20,7 +19,6 @@ class Response
 
     public static function error(string $message, int $status_code = 400): void
     {
-        header("Content-Type: application/json");
         http_response_code($status_code);
         self::send([
             'success' => false,

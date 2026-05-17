@@ -41,7 +41,9 @@ class ComplaintRepository
         $stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
         $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
         $stmt->execute();
-        return "Queja agregada con éxito";
+        $complaint_id = self::$conn->lastInsertId();
+        $complaint = $this->getComplaintById($complaint_id);
+        return $complaint;
     }
 
     public function updateComplaint(int $id, mixed $data)
@@ -53,17 +55,17 @@ class ComplaintRepository
         $stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
         $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
         $stmt->execute();
-        return "Queja actualizada con éxito";
+        $complaint = $this->getComplaintById($id);
+        return $complaint;
     }
 
 
     // Soft delete to mantain complaint tracking. Instead of deleting, we set a deleted_at flag and exlude those records in the GET methods. 
-    public function deleteComplaint(int $id)
+    public function deleteComplaint(int $id) : void
     {
         $sql = "UPDATE complaints SET deleted_at = NOW() WHERE id = :id";
         $stmt = self::$conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
-        return "Queja eliminada con éxito";
     }
 }
