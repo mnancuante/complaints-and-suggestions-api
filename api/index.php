@@ -19,7 +19,7 @@ $complaint_controller = new ComplaintController($complaint_service);
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-$uri = str_replace('/crud-complaints/api/index.php', '', $uri);
+$uri = str_replace('/crud-complaints/api/', '', $uri);
 
 $segments = explode('/', trim($uri, '/'));
 $resource = $segments[0] ?? null;;
