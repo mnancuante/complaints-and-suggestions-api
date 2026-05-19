@@ -39,7 +39,7 @@ if ($resource === 'complaints') {
             break;
 
         case 'PUT':
-            $complaint_controller->updateComplaint();
+            $complaint_controller->updateComplaint($id);
             break;
 
         case 'DELETE':

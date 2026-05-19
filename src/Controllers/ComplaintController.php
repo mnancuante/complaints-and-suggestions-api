@@ -53,7 +53,7 @@ class ComplaintController
         }
     }
 
-    public function updateComplaint()
+    public function updateComplaint($id)
     {
         try {
             $data = json_decode(file_get_contents('php://input'), true);
@@ -62,12 +62,9 @@ class ComplaintController
                 throw new \Exception('Invalid input: JSON body is required');
             }
 
-            if (!isset($data['id'])) {
+            if (!isset($id)) {
                 throw new \Exception('ID is required for updating a complaint');
             }
-            // Set id and remove it from data array to avoid confusion when passing it to the service
-            $id = $data['id'];
-            unset($data['id']);
 
             $result = $this->complaint_service->updateComplaint($id, $data);
             Response::success($result);
