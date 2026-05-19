@@ -18,6 +18,9 @@ This project was built to revisit and reinforce backend fundamentals without usi
 - Soft delete support using `deleted_at` flag
 - Input validation for IDs and request body data
 - Separation of concerns between Controllers, Services, Repositories and Validators
+- Apache URL rewriting with .htaccess
+- Clean API endpoints
+- RESTful route parameters (`/complaints/1`)
 
 ---
 
@@ -121,6 +124,7 @@ return [
 ### 5. Start Apache and MySQL
 
 Start both services from the XAMPP control panel.
+Make sure Apache `mod_rewrite` is enabled.
 
 ---
 
@@ -137,7 +141,7 @@ GET /api/index.php/complaints
 ### Get complaint by ID
 
 ```http
-GET /api/index.php/complaints?id=1
+GET /api/index.php/complaints/1
 ```
 
 ---
@@ -162,28 +166,28 @@ JSON body is required. Example body:
 ### Update complaint
 
 ```http
-PUT /api/index.php/complaints
+PUT /api/index.php/complaints/1
 ```
 
 ID is required. Example body:
 
 ```json
 {
-  "id": 1,
   "title": "Updated title",
   "description": "Updated description",
   "status": "in_progress"
 }
 ```
+The complaint ID must be provided in the URL only.
+Sending an `id` field in the request body is not allowed.
 
 ---
 
 ### Delete complaint (Soft Delete)
 
 ```http
-DELETE /api/index.php/complaints?id=1
+DELETE /api/index.php/complaints/1
 ```
-ID is required
 
 ---
 
@@ -208,7 +212,6 @@ This project follows a simple layered architecture approach:
 - PATCH support
 - Unit testing
 - Environment variables using `.env`
-- RESTful route parameters (`/complaints/1`)
 
 ---
 
