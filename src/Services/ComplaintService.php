@@ -36,17 +36,12 @@ class ComplaintService
     public function createComplaint(array $data)
     {
 
+        ComplaintValidator::validateComplaintData($data);
         $data = $this->normalizeComplaintData($data);
 
         if (isset($data['id'])) {
             throw new \Exception('ID should not be provided, it is auto-generated');
         }
-
-        if (!isset($data['title']) || !isset($data['description'])) {
-            throw new \Exception('Both title and description are required');
-        }
-
-        ComplaintValidator::validateComplaintData($data);
 
         return $this->complaint_repository->createComplaint($data);
     }

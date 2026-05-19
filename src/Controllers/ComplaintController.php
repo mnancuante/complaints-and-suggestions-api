@@ -21,6 +21,10 @@ class ComplaintController
                 throw new \Exception('Invalid input: JSON body is required');
             }
 
+            if (!isset($data['title']) || !isset($data['description'])) {
+                throw new \Exception('Both title and description are required');
+            }
+
             $result = $this->complaint_service->createComplaint($data);
 
             Response::success($result);
