@@ -70,8 +70,8 @@ class ComplaintService
         if (isset($data['id'])) {
             throw new \Exception('ID must be specified only in the URL.');
         }
-        $data = $this->normalizeComplaintData($data);
         ComplaintValidator::validateComplaintData($data);
+        $data = $this->normalizeComplaintData($data);
         return $this->complaint_repository->updateComplaint($id, $data);
     }
 
