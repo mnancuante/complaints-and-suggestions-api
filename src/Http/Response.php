@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Http;
+
 class Response
 {
     private static function send(array $response, int $status_code): void

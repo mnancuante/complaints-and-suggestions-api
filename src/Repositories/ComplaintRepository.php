@@ -1,10 +1,9 @@
 <?php
-//aqui consultamos a la DB
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+namespace App\Repositories;
 
-require __DIR__ . '/../../database/Database.php';
+use App\Database\Database;
+use PDO;
 
 class ComplaintRepository
 {

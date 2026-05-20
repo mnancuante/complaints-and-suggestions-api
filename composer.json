@@ -1,0 +1,16 @@
+{
+    "name": "mnancuante/complaints-and-suggestions-api",
+    "description": "Backend practice project focused on core API design concepts: layered architecture, CRUD operations, validation, HTTP responses, soft delete, routing, and database interaction using PHP Vanilla and PDO.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "mnancuante"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

@@ -1,6 +1,10 @@
 <?php
-require_once __DIR__ . '/../Services/ComplaintService.php';
-require_once __DIR__ . '/../Http/Response.php';
+
+namespace App\Controllers;
+
+use App\Services\ComplaintService;
+use App\Http\Response;
+use Exception;
 
 class ComplaintController
 {

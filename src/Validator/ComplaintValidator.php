@@ -1,4 +1,5 @@
 <?php
+namespace App\Validator;
 
 class ComplaintValidator
 {

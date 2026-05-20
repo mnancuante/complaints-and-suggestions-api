@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Database;
+use PDO;
+use PDOException;
+
 class Database
 {
     private $host;
@@ -10,7 +14,7 @@ class Database
 
     public function __construct()
     {
-        $config = require_once __DIR__ . '/../config/config.php';
+        $config = require_once __DIR__ . '/../../config/config.php';
         $db_config = $config['db'];
 
         $this->host = $db_config['host'];

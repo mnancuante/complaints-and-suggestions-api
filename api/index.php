@@ -3,13 +3,13 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-header("Content-Type: application/json");
+require_once __DIR__ . '/../vendor/autoload.php';
 
-require_once __DIR__ . '/../src/Controllers/ComplaintController.php';
-require_once __DIR__ . '/../src/Services/ComplaintService.php';
-require_once __DIR__ . '/../src/Repositories/ComplaintRepository.php';
-require_once __DIR__ . '/../src/Model/ComplaintStatus.php';
-require_once __DIR__ . '/../src/Http/Response.php';
+use App\Database\Database;
+use App\Controllers\ComplaintController;
+use App\Repositories\ComplaintRepository;
+use App\Services\ComplaintService;
+use App\Http\Response;
 
 $database = new Database();
 $complaint_repository = new ComplaintRepository($database);
@@ -19,7 +19,7 @@ $complaint_controller = new ComplaintController($complaint_service);
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-$uri = str_replace('/crud-complaints/api/', '', $uri);
+$uri = str_replace('/complaints-and-suggestions-api/api/', '', $uri);
 
 $segments = explode('/', trim($uri, '/'));
 $resource = $segments[0] ?? null;;

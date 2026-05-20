@@ -1,4 +1,6 @@
 <?php
+namespace App\Model;
+
 class ComplaintStatus
 {
     const OPEN = 'open';

@@ -1,8 +1,9 @@
 <?php
+namespace App\Services;
 
-require_once __DIR__ . '/../Repositories/ComplaintRepository.php';
-require_once __DIR__ . '/../Model/ComplaintStatus.php';
-require_once __DIR__ . '/../Validator/ComplaintValidator.php';
+use App\Repositories\ComplaintRepository;
+use App\Model\ComplaintStatus;
+use App\Validator\ComplaintValidator;
 
 class ComplaintService
 {
