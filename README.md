@@ -21,16 +21,17 @@ This project was built to revisit and reinforce backend fundamentals without usi
 - Apache URL rewriting with .htaccess
 - Clean API endpoints
 - RESTful route parameters (`/complaints/1`)
+- Composer PSR-4 autoloading
 
 ---
 
-## Technologies
+## Requirements
 
-- PHP Vanilla
+- PHP
 - MySQL / MariaDB
-- PDO
+- Composer
 - Apache
-- XAMPP
+- Recomended: XAMPP (or similar local environment)
 
 ---
 
@@ -40,28 +41,26 @@ This project was built to revisit and reinforce backend fundamentals without usi
 complaints-and-suggestions-api/
 │
 ├── api/
-│   └── index.php
-│
 ├── config/
-│   ├── config.example.php
-│   └── config.php
-│
-├── database/
-│   ├── Database.php
-│   ├──sql/
-│   └── db.sql
-│
+├── public/
 ├── src/
 │   ├── Controllers/
+│   ├── Database/
+│   │   └──sql/
 │   ├── Services/
-│   ├── Repositories/
-│   ├── Validators/
+│   ├── Repository/
+│   ├── Validator/
 │   ├── Models/
 │   └── Http/
 │
+├── vendor/
 ├── .gitignore
+├── composer.json
 └── README.md
 ```
+
+The `/vendor` directory is ignored in Git and must be installed using Composer.
+
 ---
 
 ## Installation
@@ -74,7 +73,15 @@ git clone https://github.com/mnancuante/complaints-and-suggestions-api.git
 
 ---
 
-### 2. Move the project into your web server directory
+### 2. Install dependencies
+
+```bash
+composer install
+```
+
+---
+
+### 3. Move the project into your web server directory
 
 Example using XAMPP:
 
@@ -90,9 +97,9 @@ C:\xampp\htdocs
 
 ---
 
-### 3. Create the database
+### 4. Create the database
 
-Import the SQL files located in the `sql/` directory using:
+Import the SQL files located in the `/Database/sql/` directory using:
 
 - phpMyAdmin
 - SequelAce
@@ -101,7 +108,7 @@ Import the SQL files located in the `sql/` directory using:
 
 ---
 
-### 4. Configure database credentials
+### 5. Configure database credentials
 
 Create a `config.php` file inside the `config/` directory based on `config.example.php`.
 
@@ -121,7 +128,7 @@ return [
 
 ---
 
-### 5. Start Apache and MySQL
+### 6. Start Apache and MySQL
 
 Start both services from the XAMPP control panel.
 Make sure Apache `mod_rewrite` is enabled.
@@ -133,7 +140,7 @@ Make sure Apache `mod_rewrite` is enabled.
 ### Get all complaints
 
 ```http
-GET /api/index.php/complaints
+GET /api/complaints
 ```
 
 ---
@@ -141,7 +148,7 @@ GET /api/index.php/complaints
 ### Get complaint by ID
 
 ```http
-GET /api/index.php/complaints/1
+GET /api/complaints/1
 ```
 
 ---
@@ -149,7 +156,7 @@ GET /api/index.php/complaints/1
 ### Create complaint
 
 ```http
-POST /api/index.php/complaints
+POST /api/complaints
 ```
 JSON body is required. Example body:
 
@@ -166,7 +173,7 @@ JSON body is required. Example body:
 ### Update complaint
 
 ```http
-PUT /api/index.php/complaints/1
+PUT /api/complaints/1
 ```
 
 ID is required. Example body:
@@ -186,7 +193,7 @@ Sending an `id` field in the request body is not allowed.
 ### Delete complaint (Soft Delete)
 
 ```http
-DELETE /api/index.php/complaints/1
+DELETE /api/complaints/1
 ```
 
 ---
@@ -206,7 +213,6 @@ This project follows a simple layered architecture approach:
 ## Future Improvements
 
 - JWT Authentication
-- Composer autoloading
 - Docker support
 - Pagination
 - PATCH support

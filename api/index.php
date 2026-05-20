@@ -7,7 +7,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Database\Database;
 use App\Controllers\ComplaintController;
-use App\Repositories\ComplaintRepository;
+use App\Repository\ComplaintRepository;
 use App\Services\ComplaintService;
 use App\Http\Response;
 

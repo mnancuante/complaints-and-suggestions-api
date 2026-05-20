@@ -1,7 +1,7 @@
 <?php
 namespace App\Services;
 
-use App\Repositories\ComplaintRepository;
+use App\Repository\ComplaintRepository;
 use App\Model\ComplaintStatus;
 use App\Validator\ComplaintValidator;
 
