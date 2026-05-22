@@ -6,7 +6,7 @@ use App\Services\ComplaintService;
 use App\Http\Response;
 use Exception;
 
-class ComplaintController
+class ComplaintController extends BaseController
 {
 
     private ComplaintService $complaint_service;
@@ -19,11 +19,7 @@ class ComplaintController
     public function createComplaint()
     {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
-
-            if ($data === null || !is_array($data)) {
-                throw new \Exception('Invalid input: JSON body is required');
-            }
+            $data = $this->getRequestData();
 
             if (!isset($data['title']) || !isset($data['description'])) {
                 throw new \Exception('Both title and description are required');
@@ -64,11 +60,7 @@ class ComplaintController
     public function updateComplaint($id)
     {
         try {
-            $data = json_decode(file_get_contents('php://input'), true);
-
-            if ($data === null || !is_array($data)) {
-                throw new \Exception('Invalid input: JSON body is required');
-            }
+            $data = $this->getRequestData();
 
             if (!isset($id)) {
                 throw new \Exception('ID is required for updating a complaint');

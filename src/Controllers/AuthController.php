@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Services\AuthService;
 use App\Http\Response;
 
-class AuthController {
+class AuthController extends BaseController
+{
 
     private AuthService $auth_service;
 
@@ -13,18 +15,25 @@ class AuthController {
         $this->auth_service = $auth_service;
     }
 
-    public function register() {
-        $data = json_decode(file_get_contents('php://input'), true);
-        if (!isset($data['email']) || !isset($data['password'])) {
-            Response::error('Email and password are required', 400);
-            return;
+    public function register()
+    {
+        try {
+            $data = $this->getRequestData();
+            if (!isset($data['email']) || !isset($data['password'])) {
+                Response::error('Email and password are required', 400);
+                return;
+            }
+            $user = $this->auth_service->register($data['email'], $data['password']);
+            Response::success($user, 201);
+        } catch (\Exception $e) {
+            Response::error($e->getMessage(), 400);
         }
-        $user = $this->auth_service->register($data['email'], $data['password']);
-        Response::success($user, 201);
     }
 
-    public function login() {
-        $data = json_decode(file_get_contents('php://input'), true);
+    public function login()
+    {
+        try {
+            $data = $this->getRequestData();
         if (!isset($data['email']) || !isset($data['password'])) {
             Response::error('Email and password are required', 400);
             return;
@@ -34,6 +43,9 @@ class AuthController {
             Response::success($user, 201);
         } else {
             Response::error('Invalid email or password', 401);
+        }
+        } catch (\Exception $e) {
+            Response::error($e->getMessage(), 400);
         }
     }
 }
