@@ -10,11 +10,17 @@ use App\Controllers\ComplaintController;
 use App\Repository\ComplaintRepository;
 use App\Services\ComplaintService;
 use App\Http\Response;
+use App\Repository\UserRepository;
+use App\Services\AuthService;
+use App\Controllers\AuthController;
 
 $database = new Database();
 $complaint_repository = new ComplaintRepository($database);
 $complaint_service = new ComplaintService($complaint_repository);
 $complaint_controller = new ComplaintController($complaint_service);
+$user_repository = new UserRepository($database);
+$auth_service = new AuthService($user_repository);
+$auth_controller = new AuthController($auth_service);
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -52,6 +58,10 @@ if ($resource === 'complaints') {
         default:
             Response::error("Method Not Allowed", 405);
     }
+} elseif ($resource === 'register' && $method === 'POST') {
+    $auth_controller->register();
+} elseif ($resource === 'login' && $method === 'POST') {
+    $auth_controller->login();
 } else {
     Response::error("Not Found", 404);
 }
