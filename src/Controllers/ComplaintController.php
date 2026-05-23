@@ -81,7 +81,7 @@ class ComplaintController extends BaseController
             }
             $id = (int)$id;
             $this->complaint_service->deleteComplaint($id);
-            Response::success(["Complaint with ID $id deleted successfully"]);
+            Response::success(['message' => 'Complaint with ID $id deleted successfully']);
         } catch (Exception $e) {
             Response::error($e->getMessage());
         }
