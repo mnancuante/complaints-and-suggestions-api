@@ -2,18 +2,11 @@
 
 namespace App\Repository;
 
-use App\Database\Database;
+use App\Repository\BaseRepository;
 use PDO;
 
-class ComplaintRepository
+class ComplaintRepository extends BaseRepository
 {
-
-    private static mixed $conn;
-
-    public function __construct(Database $database)
-    {
-        self::$conn = $database->getConnection();
-    }
 
     public function getAllComplaints()
     {
@@ -60,7 +53,7 @@ class ComplaintRepository
 
 
     // Soft delete to mantain complaint tracking. Instead of deleting, we set a deleted_at flag and exlude those records in the GET methods. 
-    public function deleteComplaint(int $id) : void
+    public function deleteComplaint(int $id): void
     {
         $sql = "UPDATE complaints SET deleted_at = NOW() WHERE id = :id";
         $stmt = self::$conn->prepare($sql);

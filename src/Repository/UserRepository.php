@@ -1,19 +1,15 @@
 <?php
 
 namespace App\Repository;
-use App\Database\Database;
+
+use App\Repository\BaseRepository;
 use PDO;
 
-class UserRepository {
+class UserRepository extends BaseRepository
+{
 
-    private mixed $conn;
-
-    public function __construct(Database $database)
+    public function createUser(string $email, string $password)
     {
-        $this->conn = $database->getConnection();
-    }
-
-    public function createUser(string $email, string $password) {
         $sql = "INSERT INTO users (email, password) VALUES (:email, :password)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
@@ -24,7 +20,8 @@ class UserRepository {
         return $user;
     }
 
-    public function getUserById(int $id) {
+    public function getUserById(int $id)
+    {
         $sql = "SELECT * FROM users WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -32,7 +29,8 @@ class UserRepository {
         return $stmt->fetch();
     }
 
-    public function getUserByEmail(string $email) {
+    public function getUserByEmail(string $email)
+    {
         $sql = "SELECT * FROM users WHERE email = :email";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':email', $email, PDO::PARAM_STR);
