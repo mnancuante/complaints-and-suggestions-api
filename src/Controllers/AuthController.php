@@ -19,11 +19,7 @@ class AuthController extends BaseController
     {
         try {
             $data = $this->getRequestData();
-            if (!isset($data['email']) || !isset($data['password'])) {
-                Response::error('Email and password are required', 400);
-                return;
-            }
-            $user = $this->auth_service->register($data['email'], $data['password']);
+            $user = $this->auth_service->register($data);
             Response::success($user, 201);
         } catch (\Exception $e) {
             Response::error($e->getMessage(), 400);
@@ -34,16 +30,8 @@ class AuthController extends BaseController
     {
         try {
             $data = $this->getRequestData();
-            if (!isset($data['email']) || !isset($data['password'])) {
-                Response::error('Email and password are required', 400);
-                return;
-            }
-            $user = $this->auth_service->login($data['email'], $data['password']);
-            if ($user) {
-                Response::success($user, 200);
-            } else {
-                Response::error('Invalid email or password', 401);
-            }
+            $user = $this->auth_service->login($data);
+            Response::success($user, 201);
         } catch (\Exception $e) {
             Response::error($e->getMessage(), 400);
         }

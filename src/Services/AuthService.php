@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Repository\UserRepository;
+use App\Validator\UserValidator;
+use Exception;
+use FFI\Exception as FFIException;
 
 class AuthService
 {
@@ -22,17 +25,21 @@ class AuthService
         return $user;
     }
 
-    public function register(string $email, string $password)
+    public function register(array $data)
     {
-        $this->user_repository->createUser($email, password_hash($password, PASSWORD_BCRYPT));
-        $user = $this->user_repository->getUserByEmail($email);
+        UserValidator::validateAuthData($data);
+        if ($this->user_repository->getUserByEmail($data['email'])) {
+            throw new \Exception('Email is already taken');
+        }
+        $user = $this->user_repository->createUser($data['email'], password_hash($data['password'], PASSWORD_BCRYPT));
         return $this->sanitizeUser($user);
     }
 
-    public function login(string $email, string $password)
+    public function login(array $data)
     {
-        $user = $this->user_repository->getUserByEmail($email);
-        if ($user && password_verify($password, $user['password'])) {
+        UserValidator::validateAuthData($data);
+        $user = $this->user_repository->getUserByEmail($data['email']);
+        if ($user && password_verify($data['password'], $user['password'])) {
             return $this->sanitizeUser($user);
         }
         // return null because the controller will handle the error response
