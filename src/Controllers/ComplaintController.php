@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Services\ComplaintService;
 use App\Http\Response;
+use App\Exceptions\ApiException;
 use Exception;
 
 class ComplaintController extends BaseController
@@ -22,7 +23,7 @@ class ComplaintController extends BaseController
             $data = $this->getRequestData();
 
             if (!isset($data['title']) || !isset($data['description'])) {
-                throw new \Exception('Both title and description are required', 400);
+                throw new ApiException('Both title and description are required', 400);
             }
 
             $result = $this->complaint_service->createComplaint($data);
@@ -47,7 +48,7 @@ class ComplaintController extends BaseController
     {
         try {
             if (!ctype_digit($id)) {
-                throw new \Exception('ID must be a positive integer');
+                throw new ApiException('ID must be a positive integer', 400);
             }
             $id = (int)$id;
             $result = $this->complaint_service->getComplaintById($id);
@@ -63,7 +64,7 @@ class ComplaintController extends BaseController
             $data = $this->getRequestData();
 
             if (!isset($id)) {
-                throw new \Exception('ID is required for updating a complaint', 400);
+                throw new ApiException('ID is required for updating a complaint', 400);
             }
 
             $result = $this->complaint_service->updateComplaint($id, $data);
@@ -77,7 +78,7 @@ class ComplaintController extends BaseController
     {
         try {
             if (!ctype_digit($id)) {
-                throw new \Exception('ID must be a positive integer', 400);
+                throw new ApiException('ID must be a positive integer', 400);
             }
             $id = (int)$id;
             $this->complaint_service->deleteComplaint($id);
