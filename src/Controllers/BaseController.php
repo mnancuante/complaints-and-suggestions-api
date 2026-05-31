@@ -2,6 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Exceptions\ApiException;
+use App\Http\Response;
+
 class BaseController
 {
 
@@ -12,5 +15,17 @@ class BaseController
             throw new \Exception('Invalid input: JSON body is required');
         }
         return $data;
+    }
+
+    protected function handleException(\Throwable $e)
+    {
+        if ($e instanceof ApiException) {
+            Response::error(
+                $e->getMessage(),
+                $e->getCode()
+            );
+            return;
+        }
+        Response::error('Internal Server Error', 500);
     }
 }

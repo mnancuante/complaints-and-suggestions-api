@@ -30,7 +30,7 @@ class ComplaintController extends BaseController
 
             Response::success($result);
         } catch (Exception $e) {
-            Response::error($e->getMessage(), $e->getCode());
+            $this->handleException($e);
         }
     }
 
@@ -40,7 +40,7 @@ class ComplaintController extends BaseController
             $result = $this->complaint_service->getAllComplaints();
             Response::success($result);
         } catch (Exception $e) {
-            Response::error($e->getMessage(), $e->getCode());
+            $this->handleException($e);
         }
     }
 
@@ -54,7 +54,7 @@ class ComplaintController extends BaseController
             $result = $this->complaint_service->getComplaintById($id);
             Response::success($result);
         } catch (Exception $e) {
-            Response::error($e->getMessage(), $e->getCode());
+            $this->handleException($e);
         }
     }
 
@@ -70,7 +70,7 @@ class ComplaintController extends BaseController
             $result = $this->complaint_service->updateComplaint($id, $data);
             Response::success($result);
         } catch (Exception $e) {
-            Response::error($e->getMessage(), $e->getCode());
+            $this->handleException($e);
         }
     }
 
@@ -83,8 +83,8 @@ class ComplaintController extends BaseController
             $id = (int)$id;
             $this->complaint_service->deleteComplaint($id);
             Response::success(['message' => 'Complaint with ID $id deleted successfully', 200]);
-        } catch (Exception $e) {
-            Response::error($e->getMessage(), $e->getCode());
+        } catch (\Throwable $e) {
+            $this->handleException($e);
         }
     }
 }

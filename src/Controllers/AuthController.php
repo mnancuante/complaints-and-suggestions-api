@@ -21,8 +21,8 @@ class AuthController extends BaseController
             $data = $this->getRequestData();
             $user = $this->auth_service->register($data);
             Response::success($user, 201);
-        } catch (\Exception $e) {
-            Response::error($e->getMessage(), $e->getCode());
+        } catch (\Throwable $e) {
+            $this->handleException($e);
         }
     }
 
@@ -32,8 +32,8 @@ class AuthController extends BaseController
             $data = $this->getRequestData();
             $user = $this->auth_service->login($data);
             Response::success($user, 201);
-        } catch (\Exception $e) {
-            Response::error($e->getMessage(), $e->getCode());
+        } catch (\Throwable $e) {
+            $this->handleException($e);
         }
     }
 }
