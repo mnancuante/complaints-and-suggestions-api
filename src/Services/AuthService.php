@@ -4,8 +4,7 @@ namespace App\Services;
 
 use App\Repository\UserRepository;
 use App\Validator\UserValidator;
-use Exception;
-use FFI\Exception as FFIException;
+use App\Exceptions\ApiException;
 
 class AuthService
 {
@@ -29,7 +28,7 @@ class AuthService
     {
         UserValidator::validateAuthData($data);
         if ($this->user_repository->getUserByEmail($data['email'])) {
-            throw new \Exception('Email is already taken');
+            throw new ApiException('Email is already taken', 409);
         }
         $user = $this->user_repository->createUser($data['email'], password_hash($data['password'], PASSWORD_BCRYPT));
         return $this->sanitizeUser($user);
@@ -41,8 +40,8 @@ class AuthService
         $user = $this->user_repository->getUserByEmail($data['email']);
         if ($user && password_verify($data['password'], $user['password'])) {
             return $this->sanitizeUser($user);
+        } else {
+            throw new ApiException('Invalid credentials', 401);
         }
-        // return null because the controller will handle the error response
-        return null;
     }
 }

@@ -22,14 +22,14 @@ class ComplaintController extends BaseController
             $data = $this->getRequestData();
 
             if (!isset($data['title']) || !isset($data['description'])) {
-                throw new \Exception('Both title and description are required');
+                throw new \Exception('Both title and description are required', 400);
             }
 
             $result = $this->complaint_service->createComplaint($data);
 
             Response::success($result);
         } catch (Exception $e) {
-            Response::error($e->getMessage());
+            Response::error($e->getMessage(), $e->getCode());
         }
     }
 
@@ -39,7 +39,7 @@ class ComplaintController extends BaseController
             $result = $this->complaint_service->getAllComplaints();
             Response::success($result);
         } catch (Exception $e) {
-            Response::error($e->getMessage());
+            Response::error($e->getMessage(), $e->getCode());
         }
     }
 
@@ -53,7 +53,7 @@ class ComplaintController extends BaseController
             $result = $this->complaint_service->getComplaintById($id);
             Response::success($result);
         } catch (Exception $e) {
-            Response::error($e->getMessage());
+            Response::error($e->getMessage(), $e->getCode());
         }
     }
 
@@ -63,13 +63,13 @@ class ComplaintController extends BaseController
             $data = $this->getRequestData();
 
             if (!isset($id)) {
-                throw new \Exception('ID is required for updating a complaint');
+                throw new \Exception('ID is required for updating a complaint', 400);
             }
 
             $result = $this->complaint_service->updateComplaint($id, $data);
             Response::success($result);
         } catch (Exception $e) {
-            Response::error($e->getMessage());
+            Response::error($e->getMessage(), $e->getCode());
         }
     }
 
@@ -77,13 +77,13 @@ class ComplaintController extends BaseController
     {
         try {
             if (!ctype_digit($id)) {
-                throw new \Exception('ID must be a positive integer');
+                throw new \Exception('ID must be a positive integer', 400);
             }
             $id = (int)$id;
             $this->complaint_service->deleteComplaint($id);
-            Response::success(['message' => 'Complaint with ID $id deleted successfully']);
+            Response::success(['message' => 'Complaint with ID $id deleted successfully', 200]);
         } catch (Exception $e) {
-            Response::error($e->getMessage());
+            Response::error($e->getMessage(), $e->getCode());
         }
     }
 }

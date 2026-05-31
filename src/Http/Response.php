@@ -16,7 +16,7 @@ class Response
         self::send([
             'success' => true,
             'data' => $data
-        ], 200);
+        ], $status_code);
     }
 
     public static function error(string $message, int $status_code = 400): void
@@ -25,6 +25,6 @@ class Response
         self::send([
             'success' => false,
             'message' => $message
-        ], 400);
+        ], $status_code);
     }
 }

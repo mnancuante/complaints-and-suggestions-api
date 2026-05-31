@@ -1,9 +1,12 @@
 <?php
+
 namespace App\Services;
 
+use App\Exceptions\ApiException;
 use App\Repository\ComplaintRepository;
 use App\Model\ComplaintStatus;
 use App\Validator\ComplaintValidator;
+use AppendIterator;
 
 class ComplaintService
 {
@@ -19,7 +22,7 @@ class ComplaintService
     {
         $complaint = $this->complaint_repository->getComplaintById($id);
         if (!$complaint) {
-            throw new \Exception('Complaint not found with ID: ' . $id);
+            throw new ApiException('Complaint not found with ID: ' . $id, 404);
         }
     }
 
@@ -29,7 +32,7 @@ class ComplaintService
         $data['description'] = trim($data['description']);
         $data['status'] = empty($data['status']) ? ComplaintStatus::OPEN : trim($data['status']);
         if (ComplaintStatus::isValid($data['status']) === false) {
-            throw new \Exception('Invalid status value.');
+            throw new ApiException('Invalid status value.', 400);
         }
         return $data;
     }
@@ -41,7 +44,7 @@ class ComplaintService
         $data = $this->normalizeComplaintData($data);
 
         if (isset($data['id'])) {
-            throw new \Exception('ID should not be provided, it is auto-generated');
+            throw new ApiException('ID should not be provided, it is auto-generated', 400);
         }
 
         return $this->complaint_repository->createComplaint($data);
@@ -64,14 +67,14 @@ class ComplaintService
         ComplaintValidator::validateId($id);
         $this->findComplaintOrfail($id);
         if (isset($data['id'])) {
-            throw new \Exception('ID must be specified only in the URL.');
+            throw new ApiException('ID must be specified only in the URL.', 400);
         }
         ComplaintValidator::validateComplaintData($data);
         $data = $this->normalizeComplaintData($data);
         return $this->complaint_repository->updateComplaint($id, $data);
     }
 
-    public function deleteComplaint(int $id) : void
+    public function deleteComplaint(int $id): void
     {
         ComplaintValidator::validateId($id);
         $this->findComplaintOrfail($id);

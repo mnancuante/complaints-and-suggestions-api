@@ -22,7 +22,7 @@ class AuthController extends BaseController
             $user = $this->auth_service->register($data);
             Response::success($user, 201);
         } catch (\Exception $e) {
-            Response::error($e->getMessage(), 400);
+            Response::error($e->getMessage(), $e->getCode());
         }
     }
 
@@ -33,7 +33,7 @@ class AuthController extends BaseController
             $user = $this->auth_service->login($data);
             Response::success($user, 201);
         } catch (\Exception $e) {
-            Response::error($e->getMessage(), 400);
+            Response::error($e->getMessage(), $e->getCode());
         }
     }
 }
