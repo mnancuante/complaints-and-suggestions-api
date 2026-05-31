@@ -11,7 +11,7 @@ class ComplaintRepository extends BaseRepository
     public function getAllComplaints()
     {
         $sql = "SELECT * FROM complaints WHERE deleted_at IS NULL";
-        $stmt = self::$conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -19,7 +19,7 @@ class ComplaintRepository extends BaseRepository
     public function getComplaintById(int $id)
     {
         $sql = "SELECT * FROM complaints WHERE id = :id AND deleted_at IS NULL";
-        $stmt = self::$conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch();
@@ -28,12 +28,12 @@ class ComplaintRepository extends BaseRepository
     public function createComplaint(array $data)
     {
         $sql = "INSERT INTO complaints (title, description, status) VALUES (:title, :description, :status)";
-        $stmt = self::$conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':title', $data['title'], PDO::PARAM_STR);
         $stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
         $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
         $stmt->execute();
-        $complaint_id = self::$conn->lastInsertId();
+        $complaint_id = $this->conn->lastInsertId();
         $complaint = $this->getComplaintById($complaint_id);
         return $complaint;
     }
@@ -41,7 +41,7 @@ class ComplaintRepository extends BaseRepository
     public function updateComplaint(int $id, mixed $data)
     {
         $sql = "UPDATE complaints SET title = :title, description = :description, status = :status WHERE id = :id";
-        $stmt = self::$conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->bindParam(':title', $data['title'], PDO::PARAM_STR);
         $stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
@@ -56,7 +56,7 @@ class ComplaintRepository extends BaseRepository
     public function deleteComplaint(int $id): void
     {
         $sql = "UPDATE complaints SET deleted_at = NOW() WHERE id = :id";
-        $stmt = self::$conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
         $stmt->execute();
     }
