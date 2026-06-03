@@ -5,15 +5,18 @@ namespace App\Services;
 use App\Repository\UserRepository;
 use App\Validator\UserValidator;
 use App\Exceptions\ApiException;
+use App\Services\JWTService;
 
 class AuthService
 {
 
     private UserRepository $user_repository;
+    private JWTService $jwt_service;
 
-    public function __construct(UserRepository $user_repository)
+    public function __construct(UserRepository $user_repository, JWTService $jwt_service)
     {
         $this->user_repository = $user_repository;
+        $this->jwt_service = $jwt_service;
     }
 
     private function sanitizeUser(array $user): array
@@ -39,7 +42,12 @@ class AuthService
         UserValidator::validateAuthData($data);
         $user = $this->user_repository->getUserByEmail($data['email']);
         if ($user && password_verify($data['password'], $user['password'])) {
-            return $this->sanitizeUser($user);
+            $token = $this->jwt_service->generateToken($user);
+            $user = $this->sanitizeUser($user);
+            return [
+                'user' => $user,
+                'token' => $token
+            ];
         } else {
             throw new ApiException('Invalid credentials', 401);
         }
