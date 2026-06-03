@@ -9,6 +9,7 @@ use App\Database\Database;
 use App\Controllers\ComplaintController;
 use App\Repository\ComplaintRepository;
 use App\Services\ComplaintService;
+use App\Services\JWTService;
 use App\Http\Response;
 use App\Repository\UserRepository;
 use App\Services\AuthService;
@@ -19,7 +20,12 @@ $complaint_repository = new ComplaintRepository($database);
 $complaint_service = new ComplaintService($complaint_repository);
 $complaint_controller = new ComplaintController($complaint_service);
 $user_repository = new UserRepository($database);
-$auth_service = new AuthService($user_repository);
+$config = require __DIR__ . '/../config/config.php';
+$jwt_service = new JWTService(
+    $config['jwt']['secret_key'],
+    $config['jwt']['expiration']
+);
+$auth_service = new AuthService($user_repository, $jwt_service);
 $auth_controller = new AuthController($auth_service);
 
 $method = $_SERVER['REQUEST_METHOD'];
