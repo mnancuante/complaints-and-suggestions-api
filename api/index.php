@@ -10,6 +10,7 @@ use App\Controllers\ComplaintController;
 use App\Repository\ComplaintRepository;
 use App\Services\ComplaintService;
 use App\Services\JWTService;
+use App\Middleware\AuthMiddleware;
 use App\Http\Response;
 use App\Repository\UserRepository;
 use App\Services\AuthService;
@@ -27,6 +28,7 @@ $jwt_service = new JWTService(
 );
 $auth_service = new AuthService($user_repository, $jwt_service);
 $auth_controller = new AuthController($auth_service);
+$auth_middleware = new AuthMiddleware($jwt_service);
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -37,37 +39,47 @@ $segments = explode('/', trim($uri, '/'));
 $resource = $segments[0] ?? null;;
 $id = $segments[1] ?? null;
 
-if ($resource === 'complaints') {
-    switch ($method) {
-        case 'GET':
-            if (isset($id)) {
-                $complaint_controller->getComplaintById($id);
-            } else {
-                $complaint_controller->getAllComplaints();
-            }
-            break;
-        case 'POST':
-            $complaint_controller->createComplaint();
-            break;
+try {
 
-        case 'PUT':
-            $complaint_controller->updateComplaint($id);
-            break;
+    if ($resource === 'complaints') {
+        switch ($method) {
+            case 'GET':
+                if (isset($id)) {
+                    $authenticated_user = $auth_middleware->handle();
+                    $complaint_controller->getComplaintById($id, $authenticated_user);
+                } else {
+                    $authenticated_user = $auth_middleware->handle();
+                    $complaint_controller->getAllComplaints($authenticated_user);
+                }
+                break;
+            case 'POST':
+                $authenticated_user = $auth_middleware->handle();
+                $complaint_controller->createComplaint($authenticated_user);
+                break;
 
-        case 'DELETE':
-            if (isset($id)) {
-                $complaint_controller->deleteComplaint($id);
-            } else {
-                Response::error('ID is required for DELETE method', 400);
-            }
-            break;
-        default:
-            Response::error("Method Not Allowed", 405);
+            case 'PUT':
+                $authenticated_user = $auth_middleware->handle();
+                $complaint_controller->updateComplaint($id, $authenticated_user);
+                break;
+
+            case 'DELETE':
+                if (isset($id)) {
+                    $authenticated_user = $auth_middleware->handle();
+                    $complaint_controller->deleteComplaint($id, $authenticated_user);
+                } else {
+                    Response::error('ID is required for DELETE method', 400);
+                }
+                break;
+            default:
+                Response::error("Method Not Allowed", 405);
+        }
+    } elseif ($resource === 'register' && $method === 'POST') {
+        $auth_controller->register();
+    } elseif ($resource === 'login' && $method === 'POST') {
+        $auth_controller->login();
+    } else {
+        Response::error("Not Found", 404);
     }
-} elseif ($resource === 'register' && $method === 'POST') {
-    $auth_controller->register();
-} elseif ($resource === 'login' && $method === 'POST') {
-    $auth_controller->login();
-} else {
-    Response::error("Not Found", 404);
+} catch (Exception $e) {
+    Response::error($e->getMessage(), $e->getCode() ?: 500);
 }
