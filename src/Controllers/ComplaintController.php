@@ -17,7 +17,7 @@ class ComplaintController extends BaseController
         $this->complaint_service = $complaint_service;
     }
 
-    public function createComplaint()
+    public function createComplaint($user_id)
     {
         try {
             $data = $this->getRequestData();
@@ -26,7 +26,7 @@ class ComplaintController extends BaseController
                 throw new ApiException('Both title and description are required', 400);
             }
 
-            $result = $this->complaint_service->createComplaint($data);
+            $result = $this->complaint_service->createComplaint($data, $user_id);
 
             Response::success($result);
         } catch (Exception $e) {

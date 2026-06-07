@@ -37,7 +37,7 @@ class ComplaintService
         return $data;
     }
 
-    public function createComplaint(array $data)
+    public function createComplaint(array $data, int $user_id)
     {
 
         ComplaintValidator::validateComplaintData($data);
@@ -47,7 +47,7 @@ class ComplaintService
             throw new ApiException('ID should not be provided, it is auto-generated', 400);
         }
 
-        return $this->complaint_repository->createComplaint($data);
+        return $this->complaint_repository->createComplaint($data, $user_id);
     }
 
     public function getAllComplaints()

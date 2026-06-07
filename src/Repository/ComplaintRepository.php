@@ -25,13 +25,14 @@ class ComplaintRepository extends BaseRepository
         return $stmt->fetch();
     }
 
-    public function createComplaint(array $data)
+    public function createComplaint(array $data, int $user_id)
     {
-        $sql = "INSERT INTO complaints (title, description, status) VALUES (:title, :description, :status)";
+        $sql = "INSERT INTO complaints (title, description, status, user_id) VALUES (:title, :description, :status, :user_id)";
         $stmt = $this->conn->prepare($sql);
         $stmt->bindParam(':title', $data['title'], PDO::PARAM_STR);
         $stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
         $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->execute();
         $complaint_id = $this->conn->lastInsertId();
         $complaint = $this->getComplaintById($complaint_id);

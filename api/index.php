@@ -54,7 +54,7 @@ try {
                 break;
             case 'POST':
                 $authenticated_user = $auth_middleware->handle();
-                $complaint_controller->createComplaint($authenticated_user);
+                $complaint_controller->createComplaint($authenticated_user['user_id']);
                 break;
 
             case 'PUT':
@@ -81,5 +81,5 @@ try {
         Response::error("Not Found", 404);
     }
 } catch (Exception $e) {
-    Response::error($e->getMessage(), $e->getCode() ?: 500);
+    Response::error($e->getMessage(), $e->getCode());
 }

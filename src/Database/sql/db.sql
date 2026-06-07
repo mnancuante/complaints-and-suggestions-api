@@ -1,16 +1,24 @@
-CREATE DATABASE complaints_db
-    DEFAULT CHARACTER SET = 'utf8mb4';
+DROP TABLE IF EXISTS complaints;
+
+DROP TABLE IF EXISTS users;
+
+CREATE DATABASE complaints_db DEFAULT CHARACTER SET = 'utf8mb4';
 
 USE complaints_db;
 
-CREATE TABLE complaints_db.complaints (
+CREATE TABLE complaints (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    status ENUM('open', 'in_progress', 'closed') DEFAULT 'open',
+    status ENUM(
+        'open',
+        'in_progress',
+        'closed'
+    ) DEFAULT 'open',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
 ALTER TABLE complaints
 ADD COLUMN deleted_at TIMESTAMP NULL DEFAULT NULL;
 
@@ -20,3 +28,8 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE complaints ADD COLUMN user_id INT NOT NULL;
+
+ALTER TABLE complaints
+ADD CONSTRAINT fk_complaints_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE;
