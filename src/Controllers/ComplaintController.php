@@ -58,7 +58,7 @@ class ComplaintController extends BaseController
         }
     }
 
-    public function updateComplaint($id)
+    public function updateComplaint($id, $user_id)
     {
         try {
             $data = $this->getRequestData();
@@ -67,7 +67,22 @@ class ComplaintController extends BaseController
                 throw new ApiException('ID is required for updating a complaint', 400);
             }
 
-            $result = $this->complaint_service->updateComplaint($id, $data);
+            $result = $this->complaint_service->updateComplaint($id, $data, $user_id);
+            Response::success($result);
+        } catch (Exception $e) {
+            $this->handleException($e);
+        }
+    }
+
+    public function patchComplaint($id, $user_id)
+    {
+        try {
+            $data = $this->getRequestData();
+
+            if (!isset($id)) {
+                throw new ApiException('ID is required for updating a complaint', 400);
+            }
+            $result = $this->complaint_service->patchComplaint($id, $data, $user_id);
             Response::success($result);
         } catch (Exception $e) {
             $this->handleException($e);

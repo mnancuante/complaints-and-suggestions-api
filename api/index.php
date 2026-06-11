@@ -59,7 +59,12 @@ try {
 
             case 'PUT':
                 $authenticated_user = $auth_middleware->handle();
-                $complaint_controller->updateComplaint($id, $authenticated_user);
+                $complaint_controller->updateComplaint($id, $authenticated_user['user_id']);
+                break;
+
+            case 'PATCH':
+                $authenticated_user = $auth_middleware->handle();
+                $complaint_controller->patchComplaint($id, $authenticated_user['user_id']);
                 break;
 
             case 'DELETE':

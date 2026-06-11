@@ -39,17 +39,30 @@ class ComplaintRepository extends BaseRepository
         return $complaint;
     }
 
-    public function updateComplaint(int $id, mixed $data)
+    public function updateComplaint(int $complaint_id, mixed $data)
     {
-        $sql = "UPDATE complaints SET title = :title, description = :description, status = :status WHERE id = :id";
+        // here i will build the query dinamically based on the fields that are being updated, reutilizing for both put and patch methods.
+        $fields = [];
+        $params = [':id' => $complaint_id];
+        if (isset($data['title'])) {
+            $fields[] = 'title = :title';
+            $params[':title'] = $data['title'];
+        }
+        if (isset($data['description'])) {
+            $fields[] = 'description = :description';
+            $params[':description'] = $data['description'];
+        }
+        if (isset($data['status'])) {
+            $fields[] = 'status = :status';
+            $params[':status'] = $data['status'];
+        }
+        $sql = "UPDATE complaints SET " . implode(', ', $fields) . " WHERE id = :id";
         $stmt = $this->conn->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->bindParam(':title', $data['title'], PDO::PARAM_STR);
-        $stmt->bindParam(':description', $data['description'], PDO::PARAM_STR);
-        $stmt->bindParam(':status', $data['status'], PDO::PARAM_STR);
+        foreach ($params as $key => $value) {
+            $stmt->bindValue($key, $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR);
+        }
         $stmt->execute();
-        $complaint = $this->getComplaintById($id);
-        return $complaint;
+        return $this->getComplaintById($complaint_id);
     }
 
 

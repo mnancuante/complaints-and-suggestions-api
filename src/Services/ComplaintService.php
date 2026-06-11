@@ -6,7 +6,6 @@ use App\Exceptions\ApiException;
 use App\Repository\ComplaintRepository;
 use App\Model\ComplaintStatus;
 use App\Validator\ComplaintValidator;
-use AppendIterator;
 
 class ComplaintService
 {
@@ -28,12 +27,30 @@ class ComplaintService
 
     public function normalizeComplaintData(array $data): array
     {
-        $data['title'] = trim($data['title']);
-        $data['description'] = trim($data['description']);
-        $data['status'] = empty($data['status']) ? ComplaintStatus::OPEN : trim($data['status']);
-        if (ComplaintStatus::isValid($data['status']) === false) {
-            throw new ApiException('Invalid status value.', 400);
+        if (isset($data['title'])) {
+            $data['title'] = trim($data['title']);
         }
+        if (isset($data['description'])) {
+            $data['description'] = trim($data['description']);
+        }
+        if (isset($data['status'])) {
+            $data['status'] = empty($data['status']) ? ComplaintStatus::OPEN : trim($data['status']);
+            if (ComplaintStatus::isValid($data['status']) === false) {
+                throw new ApiException('Invalid status value.', 400);
+            }
+        }
+        return $data;
+    }
+
+    public function prepareUpdate(int $complaint_id, array $data, int $user_id): array
+    {
+        // this method will be used inside both patch and update methods to avoid code duplication
+        ComplaintValidator::validateId($complaint_id);
+        $complaint = $this->complaint_repository->getComplaintById($complaint_id);
+        $this->findComplaintOrfail($complaint_id);
+        ComplaintValidator::validateOwnership($complaint['user_id'], $user_id);
+        $data = $this->normalizeComplaintData($data);
+        ComplaintValidator::validateComplaintData($data);
         return $data;
     }
 
@@ -62,15 +79,16 @@ class ComplaintService
         return $this->complaint_repository->getComplaintById($id);
     }
 
-    public function updateComplaint(int $id, array $data)
+    public function updateComplaint(int $id, array $data, int $user_id)
     {
-        ComplaintValidator::validateId($id);
-        $this->findComplaintOrfail($id);
-        if (isset($data['id'])) {
-            throw new ApiException('ID must be specified only in the URL.', 400);
-        }
-        ComplaintValidator::validateComplaintData($data);
-        $data = $this->normalizeComplaintData($data);
+        ComplaintValidator::validateRequieredFields($data);
+        $data = $this->prepareUpdate($id, $data, $user_id);
+        return $this->complaint_repository->updateComplaint($id, $data);
+    }
+
+    public function patchComplaint(int $id, array $data, int $user_id)
+    {
+        $data = $this->prepareUpdate($id, $data, $user_id);
         return $this->complaint_repository->updateComplaint($id, $data);
     }
 
