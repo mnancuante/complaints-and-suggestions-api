@@ -8,10 +8,11 @@ use PDO;
 class ComplaintRepository extends BaseRepository
 {
 
-    public function getAllComplaints()
+    public function getAllComplaints(int $user_id)
     {
-        $sql = "SELECT * FROM complaints WHERE deleted_at IS NULL";
+        $sql = "SELECT * FROM complaints WHERE user_id = :user_id AND deleted_at IS NULL";
         $stmt = $this->conn->prepare($sql);
+        $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll();
     }

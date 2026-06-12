@@ -34,24 +34,24 @@ class ComplaintController extends BaseController
         }
     }
 
-    public function getAllComplaints()
+    public function getAllComplaints($user_id)
     {
         try {
-            $result = $this->complaint_service->getAllComplaints();
+            $result = $this->complaint_service->getAllComplaints($user_id);
             Response::success($result);
         } catch (Exception $e) {
             $this->handleException($e);
         }
     }
 
-    public function getComplaintbyId($id)
+    public function getComplaintbyId($id, $user_id)
     {
         try {
             if (!ctype_digit($id)) {
                 throw new ApiException('ID must be a positive integer', 400);
             }
             $id = (int)$id;
-            $result = $this->complaint_service->getComplaintById($id);
+            $result = $this->complaint_service->getComplaintById($id, $user_id);
             Response::success($result);
         } catch (Exception $e) {
             $this->handleException($e);

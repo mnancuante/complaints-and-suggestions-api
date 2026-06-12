@@ -46,10 +46,10 @@ try {
             case 'GET':
                 if (isset($id)) {
                     $authenticated_user = $auth_middleware->handle();
-                    $complaint_controller->getComplaintById($id, $authenticated_user);
+                    $complaint_controller->getComplaintById($id, $authenticated_user['user_id']);
                 } else {
                     $authenticated_user = $auth_middleware->handle();
-                    $complaint_controller->getAllComplaints($authenticated_user);
+                    $complaint_controller->getAllComplaints($authenticated_user['user_id']);
                 }
                 break;
             case 'POST':

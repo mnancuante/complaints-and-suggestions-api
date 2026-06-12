@@ -38,8 +38,7 @@ class ComplaintService
     {
         // this method will be used inside both patch and update methods to avoid code duplication
         ComplaintValidator::validateId($complaint_id);
-        $complaint = $this->getComplaintById($complaint_id);
-        ComplaintValidator::validateOwnership($complaint['user_id'], $user_id);
+        $this->getComplaintById($complaint_id, $user_id);
         $data = $this->normalizeComplaintData($data);
         ComplaintValidator::validateComplaintData($data);
         return $data;
@@ -58,18 +57,19 @@ class ComplaintService
         return $this->complaint_repository->createComplaint($data, $user_id);
     }
 
-    public function getAllComplaints()
+    public function getAllComplaints(int $user_id)
     {
-        return $this->complaint_repository->getAllComplaints();
+        return $this->complaint_repository->getAllComplaints($user_id);
     }
 
-    public function getComplaintById(int $id)
+    public function getComplaintById(int $id, int $user_id)
     {
         ComplaintValidator::validateId($id);
         $complaint = $this->complaint_repository->getComplaintById($id);
         if (!$complaint) {
             throw new ApiException('Complaint not found with ID: ' . $id, 404);
         }
+        ComplaintValidator::validateOwnership($complaint['user_id'], $user_id);
         return $complaint;
     }
 
@@ -89,8 +89,7 @@ class ComplaintService
     public function deleteComplaint(int $id, int $user_id): void
     {
         ComplaintValidator::validateId($id);
-        $complaint = $this->getComplaintById($id);
-        ComplaintValidator::validateOwnership($complaint['user_id'], $user_id);
+        $this->getComplaintById($id, $user_id);
         $this->complaint_repository->deleteComplaint($id);
     }
 }
