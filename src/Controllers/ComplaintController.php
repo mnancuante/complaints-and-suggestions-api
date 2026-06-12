@@ -89,14 +89,14 @@ class ComplaintController extends BaseController
         }
     }
 
-    public function deleteComplaint($id)
+    public function deleteComplaint($id, $user_id)
     {
         try {
             if (!ctype_digit($id)) {
                 throw new ApiException('ID must be a positive integer', 400);
             }
             $id = (int)$id;
-            $this->complaint_service->deleteComplaint($id);
+            $this->complaint_service->deleteComplaint($id, $user_id);
             Response::success(['message' => 'Complaint deleted successfully', 200]);
         } catch (\Throwable $e) {
             $this->handleException($e);

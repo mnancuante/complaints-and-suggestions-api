@@ -70,7 +70,7 @@ try {
             case 'DELETE':
                 if (isset($id)) {
                     $authenticated_user = $auth_middleware->handle();
-                    $complaint_controller->deleteComplaint($id, $authenticated_user);
+                    $complaint_controller->deleteComplaint($id, $authenticated_user['user_id']);
                 } else {
                     Response::error('ID is required for DELETE method', 400);
                 }
