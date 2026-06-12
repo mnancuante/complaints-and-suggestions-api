@@ -17,14 +17,6 @@ class ComplaintService
         $this->complaint_repository = $complaint_repository;
     }
 
-    private function findComplaintOrfail(int $id)
-    {
-        $complaint = $this->complaint_repository->getComplaintById($id);
-        if (!$complaint) {
-            throw new ApiException('Complaint not found with ID: ' . $id, 404);
-        }
-    }
-
     public function normalizeComplaintData(array $data): array
     {
         if (isset($data['title'])) {
@@ -46,8 +38,7 @@ class ComplaintService
     {
         // this method will be used inside both patch and update methods to avoid code duplication
         ComplaintValidator::validateId($complaint_id);
-        $complaint = $this->complaint_repository->getComplaintById($complaint_id);
-        $this->findComplaintOrfail($complaint_id);
+        $complaint = $this->getComplaintById($complaint_id);
         ComplaintValidator::validateOwnership($complaint['user_id'], $user_id);
         $data = $this->normalizeComplaintData($data);
         ComplaintValidator::validateComplaintData($data);
@@ -75,8 +66,11 @@ class ComplaintService
     public function getComplaintById(int $id)
     {
         ComplaintValidator::validateId($id);
-        $this->findComplaintOrfail($id);
-        return $this->complaint_repository->getComplaintById($id);
+        $complaint = $this->complaint_repository->getComplaintById($id);
+        if (!$complaint) {
+            throw new ApiException('Complaint not found with ID: ' . $id, 404);
+        }
+        return $complaint;
     }
 
     public function updateComplaint(int $id, array $data, int $user_id)
@@ -95,7 +89,7 @@ class ComplaintService
     public function deleteComplaint(int $id): void
     {
         ComplaintValidator::validateId($id);
-        $this->findComplaintOrfail($id);
+        $this->getComplaintById($id);
         $this->complaint_repository->deleteComplaint($id);
     }
 }
