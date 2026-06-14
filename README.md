@@ -22,6 +22,8 @@ This project was built to revisit and reinforce backend fundamentals without usi
 - Clean API endpoints
 - RESTful route parameters (`/complaints/1`)
 - Composer PSR-4 autoloading
+- JWT Authentication
+- PATCH support
 
 ---
 
@@ -47,10 +49,12 @@ complaints-and-suggestions-api/
 │   ├── Controllers/
 │   ├── Database/
 │   │   └──sql/
+│   ├── Exceptions/
 │   ├── Services/
 │   ├── Repository/
 │   ├── Validator/
-│   ├── Models/
+│   ├── Model/
+│   ├── Middleware/
 │   └── Http/
 │
 ├── vendor/
@@ -176,7 +180,9 @@ JSON body is required. Example body:
 PUT /api/complaints/1
 ```
 
-ID is required. Example body:
+ID is required. The complaint ID must be provided in the URL only.
+Sending an `id` field in the request body is not allowed.
+Example body:
 
 ```json
 {
@@ -185,8 +191,22 @@ ID is required. Example body:
   "status": "in_progress"
 }
 ```
-The complaint ID must be provided in the URL only.
-Sending an `id` field in the request body is not allowed.
+
+---
+
+```http
+PATCH /api/complaints/1
+```
+
+ID is required.
+At least 1 field is required.
+Example body:
+
+```json
+{
+  "description": "Updated description"
+}
+```
 
 ---
 
@@ -195,6 +215,8 @@ Sending an `id` field in the request body is not allowed.
 ```http
 DELETE /api/complaints/1
 ```
+
+ID is required.
 
 ---
 
@@ -212,12 +234,11 @@ This project follows a simple layered architecture approach:
 
 ## Future Improvements
 
-- JWT Authentication
 - Docker support
 - Pagination
-- PATCH support
 - Unit testing
 - Environment variables using `.env`
+- Roles (admin, user)
 
 ---
 
