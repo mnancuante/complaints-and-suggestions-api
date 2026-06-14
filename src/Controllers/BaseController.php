@@ -26,6 +26,6 @@ class BaseController
             );
             return;
         }
-        Response::error('Internal Server Error', 500);
+        Response::error($e->getMessage(), 500);
     }
 }

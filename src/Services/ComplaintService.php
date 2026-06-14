@@ -26,10 +26,7 @@ class ComplaintService
             $data['description'] = trim($data['description']);
         }
         if (isset($data['status'])) {
-            $data['status'] = empty($data['status']) ? ComplaintStatus::OPEN : trim($data['status']);
-            if (ComplaintStatus::isValid($data['status']) === false) {
-                throw new ApiException('Invalid status value.', 400);
-            }
+            $data['status'] = trim($data['status']);
         }
         return $data;
     }
@@ -47,8 +44,11 @@ class ComplaintService
     public function createComplaint(array $data, int $user_id)
     {
 
-        ComplaintValidator::validateComplaintData($data);
         $data = $this->normalizeComplaintData($data);
+        if (empty($data['status'])) {
+            $data['status'] = ComplaintStatus::OPEN;
+        }
+        ComplaintValidator::validateComplaintData($data);
 
         if (isset($data['id'])) {
             throw new ApiException('ID should not be provided, it is auto-generated', 400);

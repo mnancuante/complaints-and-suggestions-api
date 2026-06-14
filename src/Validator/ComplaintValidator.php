@@ -3,6 +3,7 @@
 namespace App\Validator;
 
 use App\Exceptions\ApiException;
+use App\Model\ComplaintStatus;
 
 class ComplaintValidator
 {
@@ -35,12 +36,18 @@ class ComplaintValidator
                 throw new ApiException('Description cannot exceed 1000 characters', 400);
             }
         }
-        
+
+        if (isset($data['status'])) {
+            if (!ComplaintStatus::isValid($data['status'])) {
+                throw new ApiException('Invalid status value.', 400);
+            }
+        }
+
         if (empty($data)) {
-                throw new ApiException('At least one field must be provided for update', 400);
+            throw new ApiException('At least one field must be provided for update', 400);
         }
     }
-    
+
     public static function validateRequieredFields(array $data): void
     {
         if (!isset($data['title']) || !isset($data['description'])) {
