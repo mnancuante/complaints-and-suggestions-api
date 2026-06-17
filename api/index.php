@@ -5,30 +5,18 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use App\Database\Database;
-use App\Controllers\ComplaintController;
-use App\Repository\ComplaintRepository;
-use App\Services\ComplaintService;
-use App\Services\JWTService;
-use App\Middleware\AuthMiddleware;
 use App\Http\Response;
-use App\Repository\UserRepository;
-use App\Services\AuthService;
+use App\Container\Container;
+use App\Middleware\AuthMiddleware;
 use App\Controllers\AuthController;
+use App\Controllers\ComplaintController;
 
-$database = new Database();
-$complaint_repository = new ComplaintRepository($database);
-$complaint_service = new ComplaintService($complaint_repository);
-$complaint_controller = new ComplaintController($complaint_service);
-$user_repository = new UserRepository($database);
+// I implement a simplified dependency injection container, this way the index no longer know the internal structure. It just asks for a class and the container builds it internally.
 $config = require __DIR__ . '/../config/config.php';
-$jwt_service = new JWTService(
-    $config['jwt']['secret_key'],
-    $config['jwt']['expiration']
-);
-$auth_service = new AuthService($user_repository, $jwt_service);
-$auth_controller = new AuthController($auth_service);
-$auth_middleware = new AuthMiddleware($jwt_service);
+$container = new Container($config);
+$auth_controller = $container->get(AuthController::class);
+$complaint_controller = $container->get(ComplaintController::class);
+$auth_middleware = $container->get(AuthMiddleware::class);
 
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

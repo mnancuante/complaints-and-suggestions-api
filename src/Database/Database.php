@@ -12,9 +12,8 @@ class Database
     private $dbname;
     private $port;
 
-    public function __construct()
+    public function __construct(array $config)
     {
-        $config = require_once __DIR__ . '/../../config/config.php';
         $db_config = $config['db'];
 
         $this->host = $db_config['host'];
