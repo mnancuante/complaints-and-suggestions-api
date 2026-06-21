@@ -48,7 +48,7 @@ complaints-and-suggestions-api/
 ├── src/
 │   ├── Controllers/
 │   ├── Database/
-│   │   └──sql/
+│   │   └──migrations/
 │   ├── Exceptions/
 │   ├── Services/
 │   ├── Repository/
@@ -101,20 +101,9 @@ C:\xampp\htdocs
 
 ---
 
-### 4. Create the database
+### 4. Database setup
 
-Import the SQL files located in the `/Database/sql/` directory using:
-
-- phpMyAdmin
-- SequelAce
-- DBeaver
-- or any SQL client
-
----
-
-### 5. Configure database credentials
-
-Create a `config.php` file inside the `config/` directory based on `config.example.php`.
+- Create a `config.php` file inside the `config/` directory based on `config.example.php`.
 
 Example:
 
@@ -130,9 +119,23 @@ return [
 ];
 ```
 
+- Run the migrations:
+
+```bash
+php scripts/migrate.php
+```
+
+- (Optional) Load sample data inside src/Database/seed.sql
+
+- Database schema changes are versioned through SQL migrations located in:
+
+```text
+database/migrations/
+```
+
 ---
 
-### 6. Start Apache and MySQL
+### 5. Start Apache and MySQL
 
 Start both services from the XAMPP control panel.
 Make sure Apache `mod_rewrite` is enabled.

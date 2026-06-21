@@ -1,6 +1,4 @@
-DROP DATABASE IF EXISTS complaints_db;
-
-CREATE DATABASE complaints_db DEFAULT CHARACTER SET = 'utf8mb4';
+CREATE DATABASE IF NOT EXISTS complaints_db DEFAULT CHARACTER SET = 'utf8mb4';
 
 USE complaints_db;
 
