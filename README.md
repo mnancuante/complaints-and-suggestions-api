@@ -8,22 +8,41 @@ This project was built to revisit and reinforce backend fundamentals without usi
 
 ## Features
 
-- CRUD operations for complaints and suggestions
-- Layered architecture
-- Custom router implementation
-- Request validation and data normalization
-- HTTP status code handling
-- JSON responses
-- PDO prepared statements
-- Soft delete support using `deleted_at` flag
-- Input validation for IDs and request body data
-- Separation of concerns between Controllers, Services, Repositories and Validators
-- Apache URL rewriting with .htaccess
-- Clean API endpoints
-- RESTful route parameters (`/complaints/1`)
-- Composer PSR-4 autoloading
-- JWT Authentication
-- PATCH support
+- Authentication:
+  User registration.
+  User login.
+  JWT-based authentication.
+  Protected routes through middleware.
+
+- Authorization:
+  Ownership validation.
+  Users can access only their own complaints.
+
+- Complaint Management:
+  Create complaints.
+  Retrieve complaints.
+  Update complaints (PUT).
+  Partial updates (PATCH).
+  Soft delete support using `deleted_at` flag.
+  RESTful route parameters (`/complaints/1`).
+
+- Input validation:
+  Business rules validation.
+  Exception handling.
+
+- Architecture:
+  Layered architecture.
+  Dependency Injection Container.
+  Repository pattern.
+  Service layer.
+  Centralized response format.
+  Custom router implementation.
+  Composer PSR-4 autoloading.
+  
+- Database:
+  Versioned SQL migrations.
+  Seed data support.
+  PDO prepared statements.
 
 ---
 
