@@ -22,6 +22,7 @@ class JWTService
         $payload = [
             'user_id' => $user['id'],
             'email' => $user['email'],
+            'role' => $user['role'],
             'iat' => time(),
             'exp' => time() + 3600
         ];

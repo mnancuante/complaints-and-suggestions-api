@@ -34,10 +34,10 @@ class ComplaintController extends BaseController
         }
     }
 
-    public function getAllComplaints($user_id)
+    public function getAllComplaints($authenticated_user)
     {
         try {
-            $result = $this->complaint_service->getAllComplaints($user_id);
+            $result = $this->complaint_service->getAllComplaints($authenticated_user);
             Response::success($result);
         } catch (Exception $e) {
             $this->handleException($e);

@@ -4,6 +4,7 @@ namespace App\Validator;
 
 use App\Exceptions\ApiException;
 use App\Model\ComplaintStatus;
+use App\Model\UserRole;
 
 class ComplaintValidator
 {
@@ -70,9 +71,13 @@ class ComplaintValidator
         }
     }
 
-    public static function validateOwnership(int $user_id, int $authenticated_user_id): void
+    public static function canAccessComplaint(int $user_id, array $authenticated_user): void
     {
-        if ($user_id !== $authenticated_user_id) {
+        if ($authenticated_user['role'] === UserRole::ADMIN)
+        {
+            return;
+        }
+        if ($user_id !== $authenticated_user['user_id']) {
             throw new ApiException('Unauthorized access', 403);
         }
     }

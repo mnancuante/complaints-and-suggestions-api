@@ -34,10 +34,10 @@ try {
             case 'GET':
                 if (isset($id)) {
                     $authenticated_user = $auth_middleware->handle();
-                    $complaint_controller->getComplaintById($id, $authenticated_user['user_id']);
+                    $complaint_controller->getComplaintById($id, $authenticated_user);
                 } else {
                     $authenticated_user = $auth_middleware->handle();
-                    $complaint_controller->getAllComplaints($authenticated_user['user_id']);
+                    $complaint_controller->getAllComplaints($authenticated_user);
                 }
                 break;
             case 'POST':
@@ -47,18 +47,18 @@ try {
 
             case 'PUT':
                 $authenticated_user = $auth_middleware->handle();
-                $complaint_controller->updateComplaint($id, $authenticated_user['user_id']);
+                $complaint_controller->updateComplaint($id, $authenticated_user);
                 break;
 
             case 'PATCH':
                 $authenticated_user = $auth_middleware->handle();
-                $complaint_controller->patchComplaint($id, $authenticated_user['user_id']);
+                $complaint_controller->patchComplaint($id, $authenticated_user);
                 break;
 
             case 'DELETE':
                 if (isset($id)) {
                     $authenticated_user = $auth_middleware->handle();
-                    $complaint_controller->deleteComplaint($id, $authenticated_user['user_id']);
+                    $complaint_controller->deleteComplaint($id, $authenticated_user);
                 } else {
                     Response::error('ID is required for DELETE method', 400);
                 }

@@ -31,11 +31,11 @@ class ComplaintService
         return $data;
     }
 
-    public function prepareUpdate(int $complaint_id, array $data, int $user_id): array
+    public function prepareUpdate(int $complaint_id, array $data, array $authenticated_user): array
     {
         // this method will be used inside both patch and update methods to avoid code duplication
         ComplaintValidator::validateId($complaint_id);
-        $this->getComplaintById($complaint_id, $user_id);
+        $this->getComplaintById($complaint_id, $authenticated_user);
         $data = $this->normalizeComplaintData($data);
         ComplaintValidator::validateComplaintData($data);
         return $data;
@@ -57,39 +57,43 @@ class ComplaintService
         return $this->complaint_repository->createComplaint($data, $user_id);
     }
 
-    public function getAllComplaints(int $user_id)
+    public function getAllComplaints(array $authenticated_user)
     {
-        return $this->complaint_repository->getAllComplaints($user_id);
+        if ($authenticated_user['role'] === 'admin') {
+            return $this->complaint_repository->getAllComplaints();
+        } else {
+            return $this->complaint_repository->getComplaintsByUserId($authenticated_user['user_id']);
+        }
     }
 
-    public function getComplaintById(int $id, int $user_id)
+    public function getComplaintById(int $id, array $authenticated_user)
     {
         ComplaintValidator::validateId($id);
         $complaint = $this->complaint_repository->getComplaintById($id);
         if (!$complaint) {
             throw new ApiException('Complaint not found with ID: ' . $id, 404);
         }
-        ComplaintValidator::validateOwnership($complaint['user_id'], $user_id);
+        ComplaintValidator::canAccessComplaint($complaint['user_id'], $authenticated_user);
         return $complaint;
     }
 
-    public function updateComplaint(int $id, array $data, int $user_id)
+    public function updateComplaint(int $id, array $data, array $authenticated_user)
     {
         ComplaintValidator::validateRequieredFields($data);
-        $data = $this->prepareUpdate($id, $data, $user_id);
+        $data = $this->prepareUpdate($id, $data, $authenticated_user);
         return $this->complaint_repository->updateComplaint($id, $data);
     }
 
-    public function patchComplaint(int $id, array $data, int $user_id)
+    public function patchComplaint(int $id, array $data, array $authenticated_user)
     {
-        $data = $this->prepareUpdate($id, $data, $user_id);
+        $data = $this->prepareUpdate($id, $data, $authenticated_user);
         return $this->complaint_repository->updateComplaint($id, $data);
     }
 
-    public function deleteComplaint(int $id, int $user_id): void
+    public function deleteComplaint(int $id, array $authenticated_user): void
     {
         ComplaintValidator::validateId($id);
-        $this->getComplaintById($id, $user_id);
+        $this->getComplaintById($id, $authenticated_user['user_id']);
         $this->complaint_repository->deleteComplaint($id);
     }
 }
