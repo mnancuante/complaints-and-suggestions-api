@@ -11,12 +11,14 @@ This project was built to revisit and reinforce backend fundamentals without usi
 - Authentication:
   User registration.
   User login.
-  JWT-based authentication.
+  JWT-based authentication. All complaint endpoints require a valid JWT token.
   Protected routes through middleware.
 
 - Authorization:
   Ownership validation.
-  Users can access only their own complaints.
+  Role-based access control (RBAC).
+  Admin users can access and manage all complaints.
+  Regular users can only access their own complaints.
 
 - Complaint Management:
   Create complaints.
@@ -260,7 +262,6 @@ This project follows a simple layered architecture approach:
 - Pagination
 - Unit testing
 - Environment variables using `.env`
-- Roles (admin, user)
 
 ---
 
