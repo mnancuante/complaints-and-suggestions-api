@@ -1,5 +1,18 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->safeLoad();
+$dotenv->required([
+    'DB_HOST',
+    'DB_PORT',
+    'DB_NAME',
+    'DB_USER',
+    'JWT_SECRET',
+    'JWT_EXPIRATION',
+]);
+
 $config = require __DIR__ . "/../config/config.php";
 
 $db_config = $config['db'];
@@ -27,28 +40,32 @@ try {
     $migrations = array_diff($migrations, ['.', '..']);
     sort($migrations);
     $pending_migrations = array_diff($migrations, $executed_migrations);
-    echo "Runnning pending migrations... \n";
-    foreach ($pending_migrations as $path)
-    {
-        $path = __DIR__ . '/../src/Database/migrations/' . $path;
-        $sql = file_get_contents($path);
-        $pdo->exec($sql);
-        $migration = basename($path);
-        $sql = "
-        INSERT INTO schema_migrations(version)
-        VALUES (:version)
-        ";
-    
-        $stmt = $pdo->prepare($sql);
-        
-        echo "Running migration {$migration}... \n";
-        $stmt->execute([
-            'version' => $migration
-        ]);
-        echo "Migration {$migration} completed.\n";
-    }
-    echo "Finished Successfully! \n";
+    if (!$pending_migrations) {
+        echo "No pending migrations! \n";
+        die;
+    } else {
 
+        foreach ($pending_migrations as $path) {
+            $path = __DIR__ . '/../src/Database/migrations/' . $path;
+            $sql = file_get_contents($path);
+            $pdo->exec($sql);
+            $migration = basename($path);
+            $sql = "
+            INSERT INTO schema_migrations(version)
+            VALUES (:version)
+            ";
+
+            $stmt = $pdo->prepare($sql);
+
+            echo "Running migration {$migration}... \n";
+            $stmt->execute([
+                'version' => $migration
+            ]);
+            echo "Migration {$migration} completed.\n";
+        }
+    }
+
+    echo "Finished Successfully! \n";
 } catch (Exception $e) {
     echo $e->getMessage();
 }

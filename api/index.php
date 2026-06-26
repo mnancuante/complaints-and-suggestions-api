@@ -4,6 +4,16 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../vendor/autoload.php';
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->safeLoad();
+$dotenv->required([
+    'DB_HOST',
+    'DB_PORT',
+    'DB_NAME',
+    'DB_USER',
+    'JWT_SECRET',
+    'JWT_EXPIRATION',
+]);
 
 use App\Http\Response;
 use App\Container\Container;
