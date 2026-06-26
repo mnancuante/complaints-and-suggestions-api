@@ -40,6 +40,7 @@ This project was built to revisit and reinforce backend fundamentals without usi
   Centralized response format.
   Custom router implementation.
   Composer PSR-4 autoloading.
+  Environment variables using `.env`.
   
 - Database:
   Versioned SQL migrations.
@@ -122,23 +123,30 @@ C:\xampp\htdocs
 
 ---
 
-### 4. Database setup
+### 4. Configure environment variables
 
-- Create a `config.php` file inside the `config/` directory based on `config.example.php`.
+- Create a .env file from the example file:
 
-Example:
-
-```php
-return [
-    'db' => [
-        'host' => 'localhost',
-        'user' => 'your_user',
-        'password' => 'your_password',
-        'dbname' => 'your_database',
-        'port' => 3306
-    ]
-];
+```bash
+cp .env.example .env
 ```
+
+Then update the environment variables according to your local setup:
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=your_db_name
+DB_USER=your_username
+DB_PASSWORD=your_password
+
+JWT_SECRET=your_secret_key
+JWT_EXPIRATION=3600
+```
+
+---
+
+### 5. Database setup
 
 - Run the migrations:
 
@@ -156,7 +164,7 @@ database/migrations/
 
 ---
 
-### 5. Start Apache and MySQL
+### 6. Start Apache and MySQL
 
 Start both services from the XAMPP control panel.
 Make sure Apache `mod_rewrite` is enabled.
@@ -261,7 +269,6 @@ This project follows a simple layered architecture approach:
 - Docker support
 - Pagination
 - Unit testing
-- Environment variables using `.env`
 
 ---
 
