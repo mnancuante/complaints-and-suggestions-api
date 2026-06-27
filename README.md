@@ -1,5 +1,9 @@
 # Complaints and Suggestions API
 
+A RESTful API that acts as a digital complaints and suggestions book, allowing users to submit, track and manage complaints or suggestions in a secure and organized way.
+
+---
+
 Backend practice project focused on core API design concepts using PHP Vanilla and MySQL.
 
 This project was built to revisit and reinforce backend fundamentals without using frameworks, applying concepts such as layered architecture, CRUD operations, validation, custom routing, HTTP responses, and soft delete logic.
